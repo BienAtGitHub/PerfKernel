@@ -16,6 +16,8 @@ struct wake_lock lpm_wake_lock;
 #endif
 #endif
 
+bool irq_wake_enabled;
+
 /**
 * Reboot chip
 */
@@ -368,8 +370,10 @@ static int mip4_tk_input_open(struct input_dev *dev)
 	input_info(true, &info->client->dev, "%s: sar_enable(%d)\n", __func__, info->sar_enable);
 	mip4_sar_only_mode(info, 0);
 	
-	if (device_may_wakeup(&info->client->dev))
+	if (device_may_wakeup(&info->client->dev) && info->irq_wake_enabled) {
 		disable_irq_wake(info->irq );
+		info->irq_wake_enabled = false;
+	}
 #else
 #ifdef OPEN_CLOSE_WORK
 	schedule_delayed_work(&info->resume_work, msecs_to_jiffies(1));
@@ -397,8 +401,9 @@ static void mip4_tk_input_close(struct input_dev *dev)
 	input_info(true, &info->client->dev, "%s: sar_enable(%d)\n", __func__, info->sar_enable);
 	mip4_sar_only_mode(info, 1);
 
-	if (device_may_wakeup(&info->client->dev))
-		enable_irq_wake(info->irq );
+	if (device_may_wakeup(&info->client->dev) && !enable_irq_wake(info->irq))
+		info->irq_wake_enabled = true;
+
 	mip4_tk_clear_input(info);
 #else
 #ifdef OPEN_CLOSE_WORK
