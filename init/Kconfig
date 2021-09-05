@@ -1464,6 +1464,17 @@ config SYSCTL_SYSCALL
 
 	  If unsure say N here.
 
+config FAKE_KALLSYMS
+	bool "Workaround for Android kallsyms read in userspace"
+	default n if KALLSYMS
+	default y if !KALLSYMS
+	help
+	  This option enable workaround for Android not booting with
+	  CONFIG_KALLSYMS disabled. It creates an empty /proc/kallsyms that
+	  returns nothing to programs that reads it.
+
+	  Say Y here if your device cannot boot with CONFIG_KALLSYMS=n.
+
 config KALLSYMS
 	 bool "Load all symbols for debugging/ksymoops" if EXPERT
 	 default y
