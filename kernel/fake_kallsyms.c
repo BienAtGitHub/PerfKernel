@@ -10,19 +10,21 @@
 
 #include <linux/proc_fs.h>
 #include <linux/module.h>
-#include <linux/seq_file.h>
 
-static int fake_kallsyms_open(struct inode *inode, struct file *file)
+static ssize_t fake_kallsyms_read(struct file *file, char __user *ubuf,size_t count, loff_t *ppos)
 {
         return 0;
 }
 
+static ssize_t fake_kallsyms_write(struct file *file, char __user *ubuf,size_t count, loff_t *ppos)
+{
+        return -1;
+}
+
 
 static const struct file_operations fake_kallsyms_operations = {
-        .open = fake_kallsyms_open,
-        .read = seq_read,
-        .llseek = seq_lseek,
-        .release = seq_release_private,
+        .read = fake_kallsyms_read,
+	.write = fake_kallsyms_write,
 };
 
 static int __init fake_kallsyms_init(void)
