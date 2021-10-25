@@ -22,17 +22,17 @@
 
 		gnss_if {
 			compatible = "exynos7870,gnss_if";
-			reg = <0 0xB7C00000 0x400000>;
+			reg = <0 0xF7C00000 0x400000>;
 		};
 
 		modem_if {
 			compatible = "exynos7870,modem_if";
-			reg = <0 0xB0000000 0x7800000>;
+			reg = <0 0xF0000000 0x7800000>;
 		};
 
 		dram_init {
 			compatible = "exynos7870,deliver_cp";
-			reg = <0 0xAFFFF000 0x1000>;
+			reg = <0 0xEFFFF000 0x1000>;
 		};
 
 		crypto {
