@@ -1847,10 +1847,6 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
 	p->se.avg.runnable_avg_sum = 0;
 	p->se.avg.usage_avg_sum = 0;
 	p->se.avg.remainder = 0;
-#ifdef CONFIG_SCHED_HMP
-	p->se.avg.hmp_last_up_migration = 0;
-	p->se.avg.hmp_last_down_migration = 0;
-#endif
 #endif
 #ifdef CONFIG_SCHEDSTATS
 	memset(&p->se.statistics, 0, sizeof(p->se.statistics));
@@ -2432,7 +2428,7 @@ bool single_task_running(void)
 }
 EXPORT_SYMBOL(single_task_running);
 
-#if defined(CONFIG_SCHED_HMP) || defined(CONFIG_SEC_PHCOMP)
+#if defined(CONFIG_SEC_PHCOMP)
 unsigned long nr_running_cpu(unsigned int cpu)
 {
 	return cpu_rq(cpu)->nr_running;

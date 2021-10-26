@@ -268,15 +268,11 @@ static int exynos_hpgov_set_enabled(uint32_t enable)
 		wake_up_process(exynos_hpgov.hptask);
 
 		exynos_hpgov.enabled = 1;
-#ifndef CONFIG_SCHED_HMP
 		queue_delayed_work_on(0, system_freezable_wq, &hpgov_dynamic_work, msecs_to_jiffies(exynos_hpgov.rate));
-#endif
 	} else {
 		kthread_stop(exynos_hpgov.hptask);
 		kthread_stop(exynos_hpgov.task);
-#ifndef CONFIG_SCHED_HMP
 		cancel_delayed_work_sync(&hpgov_dynamic_work);
-#endif
 		exynos_hpgov.enabled = 0;
 
 		smp_wmb();
@@ -544,12 +540,10 @@ static int __init exynos_hpgov_init(void)
 	}
 
 	HPGOV_RW_ATTRIB(0, enabled);
-#ifndef CONFIG_SCHED_HMP
 	HPGOV_RW_ATTRIB(1, up_freq);
 	HPGOV_RW_ATTRIB(2, down_freq);
 	HPGOV_RW_ATTRIB(3, rate);
 	HPGOV_RW_ATTRIB(4, load);
-#endif
 
 	exynos_hpgov.attrib.attrib_group.name = "governor";
 	ret = sysfs_create_group(exynos_cpu_hotplug_kobj(), &exynos_hpgov.attrib.attrib_group);
@@ -557,18 +551,10 @@ static int __init exynos_hpgov_init(void)
 		pr_err("Unable to create sysfs objects :%d\n", ret);
 
 	atomic_set(&exynos_hpgov.cur_cpu_max, PM_QOS_CPU_ONLINE_MAX_DEFAULT_VALUE);
-#ifndef CONFIG_SCHED_HMP
 	atomic_set(&exynos_hpgov.cur_cpu_min, NR_CLUST0_CPUS);
-#else
-	atomic_set(&exynos_hpgov.cur_cpu_min, PM_QOS_CPU_ONLINE_MIN_DEFAULT_VALUE);
-#endif
 
 	pm_qos_add_request(&hpgov_max_pm_qos, PM_QOS_CPU_ONLINE_MAX, PM_QOS_CPU_ONLINE_MAX_DEFAULT_VALUE);
-#ifndef CONFIG_SCHED_HMP
 	pm_qos_add_request(&hpgov_min_pm_qos, PM_QOS_CPU_ONLINE_MIN, NR_CLUST0_CPUS);
-#else
-	pm_qos_add_request(&hpgov_min_pm_qos, PM_QOS_CPU_ONLINE_MIN, PM_QOS_CPU_ONLINE_MIN_DEFAULT_VALUE);
-#endif
 
 	exynos_hpgov.down_freq = DEFAULT_DOWN_CHANGE_FREQ;
 	exynos_hpgov.up_freq = DEFAULT_UP_CHANGE_FREQ;

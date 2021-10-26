@@ -180,12 +180,6 @@ extern bool single_task_running(void);
 extern unsigned long nr_iowait(void);
 extern unsigned long nr_iowait_cpu(int cpu);
 extern void get_iowait_load(unsigned long *nr_waiters, unsigned long *load);
-#ifdef CONFIG_SCHED_HMP
-extern unsigned long nr_running_cpu(unsigned int cpu);
-extern int register_hmp_task_migration_notifier(struct notifier_block *nb);
-#define HMP_UP_MIGRATION       0
-#define HMP_DOWN_MIGRATION     1
-#endif
 #ifdef CONFIG_SEC_PHCOMP
 extern unsigned long nr_running_cpu(unsigned int cpu);
 #endif
@@ -1069,24 +1063,6 @@ extern void wake_up_if_idle(int cpu);
 # define SD_INIT_NAME(type)
 #endif
 
-#ifdef CONFIG_SCHED_HMP
-struct hmp_domain {
-	struct cpumask cpus;
-	struct cpumask possible_cpus;
-	struct list_head hmp_domains;
-};
-
-extern int set_hmp_boost(int enable);
-extern int set_hmp_semiboost(int enable);
-extern int set_hmp_boostpulse(int duration);
-extern int get_hmp_boost(void);
-extern int get_hmp_semiboost(void);
-extern int set_hmp_up_threshold(int value);
-extern int set_hmp_down_threshold(int value);
-extern int set_active_down_migration(int enable);
-extern int set_hmp_aggressive_up_migration(int enable);
-extern int set_hmp_aggressive_yield(int enable);
-#endif /* CONFIG_SCHED_HMP */
 #else /* CONFIG_SMP */
 
 struct sched_domain_attr;
@@ -1136,10 +1112,6 @@ struct sched_avg {
 	s64 decay_count;
 	unsigned long load_avg_contrib;
 	unsigned long load_avg_ratio;
-#ifdef CONFIG_SCHED_HMP
-	u64 hmp_last_up_migration;
-	u64 hmp_last_down_migration;
-#endif
 	u32 usage_avg_sum;
 };
 

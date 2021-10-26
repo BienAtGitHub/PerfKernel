@@ -61,10 +61,6 @@
 extern int sec_therm_get_ap_temperature(void);
 #endif
 
-#ifdef CONFIG_SCHED_HMP
-extern int set_hmp_boost(int enable);
-#endif
-
 #ifdef CONFIG_USE_VSYNC_SKIP
 void decon_extra_vsync_wait_set(int);
 void decon_extra_vsync_wait_add(int);
@@ -157,37 +153,8 @@ void gpu_destroy_context(void *ctx)
 	kctx->ctx_status = CTX_DESTROYED;
 
 	if (kctx->ctx_need_qos) {
-#ifdef CONFIG_SCHED_HMP
-		int i, policy_count;
-		const struct kbase_pm_policy *const *policy_list;
-		struct exynos_context *platform;
-		platform = (struct exynos_context *) kbdev->platform_context;
-#endif
 #ifdef CONFIG_MALI_DVFS
 		gpu_dvfs_boost_lock(GPU_DVFS_BOOST_UNSET);
-#endif
-#ifdef CONFIG_SCHED_HMP
-		/* set policy back */
-		policy_count = kbase_pm_list_policies(&policy_list);
-		if (platform->cur_policy){
-			for (i = 0; i < policy_count; i++) {
-				if (sysfs_streq(policy_list[i]->name, platform->cur_policy->name)) {
-					kbase_pm_set_policy(kbdev, policy_list[i]);
-					break;
-				}
-			}
-		}
-		else{
-			for (i = 0; i < policy_count; i++) {
-				if (sysfs_streq(policy_list[i]->name, "coarse_demand")) {
-					kbase_pm_set_policy(kbdev, policy_list[i]);
-					break;
-				}
-			}
-		}
-		set_hmp_boost(0);
-		set_hmp_aggressive_up_migration(false);
-		set_hmp_aggressive_yield(false);
 #endif
 	}
 }
@@ -243,31 +210,11 @@ int gpu_vendor_dispatch(struct kbase_context *kctx, u32 flags)
 #endif  /* MUST BE CHECK for each feature */
 	case KBASE_FUNC_SET_MIN_LOCK :
 		{
-#if defined(CONFIG_MALI_DVFS) || defined(CONFIG_SCHED_HMP)
+#if defined(CONFIG_MALI_DVFS)
 			struct exynos_context *platform;
 #endif
-#ifdef CONFIG_SCHED_HMP
-			int i, policy_count;
-			const struct kbase_pm_policy *const *policy_list;
-			platform = (struct exynos_context *) kbdev->platform_context;
-#endif /* CONFIG_SCHED_HMP */
 			if (!kctx->ctx_need_qos) {
 				kctx->ctx_need_qos = true;
-#ifdef CONFIG_SCHED_HMP
-				/* set policy to always_on */
-				policy_count = kbase_pm_list_policies(&policy_list);
-				platform->cur_policy = kbase_pm_get_policy(kbdev);
-				for (i = 0; i < policy_count; i++) {
-					if (sysfs_streq(policy_list[i]->name, "always_on")) {
-						kbase_pm_set_policy(kbdev, policy_list[i]);
-						break;
-					}
-				}
-				/* set hmp boost */
-				set_hmp_boost(1);
-				set_hmp_aggressive_up_migration(true);
-				set_hmp_aggressive_yield(true);
-#endif /* CONFIG_SCHED_HMP */
 			}
 #ifdef CONFIG_MALI_DVFS
 			platform = (struct exynos_context *) kbdev->platform_context;
@@ -278,33 +225,11 @@ int gpu_vendor_dispatch(struct kbase_context *kctx, u32 flags)
 
 	case KBASE_FUNC_UNSET_MIN_LOCK :
 		{
-#if defined(CONFIG_MALI_DVFS) || defined(CONFIG_SCHED_HMP)
+#if defined(CONFIG_MALI_DVFS)
 			struct exynos_context *platform;
 #endif
-#ifdef CONFIG_SCHED_HMP
-			int i, policy_count;
-			const struct kbase_pm_policy *const *policy_list;
-			platform = (struct exynos_context *) kbdev->platform_context;
-#endif /* CONFIG_SCHED_HMP */
 			if (kctx->ctx_need_qos) {
 				kctx->ctx_need_qos = false;
-#ifdef CONFIG_SCHED_HMP
-				/* set policy back */
-				if (platform->cur_policy) {
-					policy_count = kbase_pm_list_policies(&policy_list);
-					for (i = 0; i < policy_count; i++) {
-						if (sysfs_streq(policy_list[i]->name, platform->cur_policy->name)) {
-							kbase_pm_set_policy(kbdev, policy_list[i]);
-							break;
-						}
-					}
-					platform->cur_policy = NULL;
-				}
-				/* unset hmp boost */
-				set_hmp_boost(0);
-				set_hmp_aggressive_up_migration(false);
-				set_hmp_aggressive_yield(false);
-#endif /* CONFIG_SCHED_HMP */
 #ifdef CONFIG_MALI_DVFS
 				platform = (struct exynos_context *)kbdev->platform_context;
 				gpu_pm_qos_command(platform, GPU_CONTROL_PM_QOS_EGL_RESET);

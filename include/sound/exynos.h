@@ -54,7 +54,7 @@ enum {
 
 extern void lpass_set_sched(pid_t pid, int mode);
 
-#if defined(CONFIG_SCHED_HMP) && defined(CONFIG_EXYNOS5_DYNAMIC_CPU_HOTPLUG)
+#if defined(CONFIG_EXYNOS5_DYNAMIC_CPU_HOTPLUG)
 #define USE_EXYNOS_AUD_CPU_HOTPLUG
 extern void lpass_get_cpu_hotplug(void);
 extern void lpass_put_cpu_hotplug(void);
