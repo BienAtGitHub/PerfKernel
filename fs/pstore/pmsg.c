@@ -16,7 +16,6 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/vmalloc.h>
-#include <linux/exynos-ss.h>
 
 #include "internal.h"
 

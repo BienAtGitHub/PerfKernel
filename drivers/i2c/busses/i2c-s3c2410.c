@@ -43,7 +43,6 @@
 #include <soc/samsung/exynos-pm.h>
 static LIST_HEAD(drvdata_list);
 #endif
-#include <linux/exynos-ss.h>
 #include <linux/clk-private.h>
 
 /* see s3c2410x user guide, v1.1, section 9 (p447) for more info */
@@ -847,9 +846,7 @@ static int s3c24xx_i2c_xfer(struct i2c_adapter *adap,
 	int ret;
 
 	pm_runtime_get_sync(&adap->dev);
-	exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x1);
 	clk_prepare_enable(i2c->clk);
-	exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x3);
 
 	for (retry = 0; retry < adap->retries; retry++) {
 
@@ -859,9 +856,7 @@ static int s3c24xx_i2c_xfer(struct i2c_adapter *adap,
 		ret = s3c24xx_i2c_doxfer(i2c, msgs, num);
 
 		if (ret != -EAGAIN) {
-			exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x11);
 			clk_disable_unprepare(i2c->clk);
-			exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x13);
 			pm_runtime_put(&adap->dev);
 			return ret;
 		}
@@ -871,9 +866,7 @@ static int s3c24xx_i2c_xfer(struct i2c_adapter *adap,
 		udelay(100);
 	}
 
-	exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x11);
 	clk_disable_unprepare(i2c->clk);
-	exynos_ss_i2c_clk(i2c->clk, i2c->bus_id, 0x13);
 	pm_runtime_put(&adap->dev);
 	return -EREMOTEIO;
 }
