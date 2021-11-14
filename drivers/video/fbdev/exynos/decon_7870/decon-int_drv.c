@@ -992,11 +992,13 @@ static int decon_enter_lpd(struct decon_device *decon)
 		goto err;
 	}
 
+	exynos_ss_printk("%s +\n", __func__);
 	decon_lpd_trig_reset(decon);
 
 	decon->state = DECON_STATE_LPD_ENT_REQ;
 	decon_disable(decon);
 	decon->state = DECON_STATE_LPD;
+	exynos_ss_printk("%s -\n", __func__);
 
 	DISP_SS_EVENT_LOG(DISP_EVT_ENTER_LPD, &decon->sd, start);
 err:
@@ -1022,10 +1024,12 @@ int decon_exit_lpd(struct decon_device *decon)
 		goto err;
 	}
 
+	exynos_ss_printk("%s +\n", __func__);
 	decon->state = DECON_STATE_LPD_EXIT_REQ;
 	decon_enable(decon);
 	decon_lpd_trig_reset(decon);
 	decon->state = DECON_STATE_ON;
+	exynos_ss_printk("%s -\n", __func__);
 
 	DISP_SS_EVENT_LOG(DISP_EVT_EXIT_LPD, &decon->sd, start);
 err:

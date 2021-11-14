@@ -36,6 +36,7 @@
 #include <linux/completion.h>
 #include <linux/of.h>
 #include <linux/irq_work.h>
+#include <linux/exynos-ss.h>
 
 #include <asm/alternative.h>
 #include <asm/atomic.h>
@@ -564,6 +565,8 @@ static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
 
 	local_irq_disable();
 
+	exynos_ss_save_context(regs);
+
 	while (1)
 		wfi();
 }
@@ -580,6 +583,8 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 		trace_ipi_entry(ipi_types[ipinr]);
 		__inc_irq_stat(cpu, ipi_irqs[ipinr]);
 	}
+
+	exynos_ss_irq(ipinr, handle_IPI, irqs_disabled(), ESS_FLAG_IN);
 
 	switch (ipinr) {
 	case IPI_RESCHEDULE:
@@ -631,6 +636,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 	if ((unsigned)ipinr < NR_IPI)
 		trace_ipi_exit(ipi_types[ipinr]);
 
+	exynos_ss_irq(ipinr, handle_IPI, irqs_disabled(), ESS_FLAG_OUT);
 	set_irq_regs(old_regs);
 }
 

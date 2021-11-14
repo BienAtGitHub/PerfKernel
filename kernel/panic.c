@@ -23,6 +23,7 @@
 #include <linux/sysrq.h>
 #include <linux/init.h>
 #include <linux/nmi.h>
+#include <linux/exynos-ss.h>
 #include <asm/core_regs.h>
 #include "sched/sched.h"
 #include <linux/console.h>
@@ -114,6 +115,8 @@ void panic(const char *fmt, ...)
 
 	pr_auto(ASL5, "Kernel panic - not syncing: %s\n", buf);
 
+	exynos_ss_prepare_panic();
+	exynos_ss_dump_panic(buf, (size_t)strnlen(buf, sizeof(buf)));
 #ifdef CONFIG_DEBUG_BUGVERBOSE
 	/*
 	 * Avoid nested stack-dumping if a panic occurs during oops processing
@@ -149,6 +152,8 @@ void panic(const char *fmt, ...)
 	kmsg_dump(KMSG_DUMP_PANIC);
 
 	exynos_cs_show_pcval();
+
+	exynos_ss_post_panic();
 
 	/*
 	 * If you doubt kdump always works fine in any situation,

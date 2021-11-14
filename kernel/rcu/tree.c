@@ -56,6 +56,7 @@
 #include <linux/random.h>
 #include <linux/ftrace_event.h>
 #include <linux/suspend.h>
+#include <linux/exynos-ss.h>
 
 #include "tree.h"
 #include "rcu.h"
@@ -1070,6 +1071,9 @@ static void print_other_cpu_stall(struct rcu_state *rsp)
 	 * See Documentation/RCU/stallwarn.txt for info on how to debug
 	 * RCU CPU stall warnings.
 	 */
+	exynos_ss_save_context(NULL);
+	exynos_ss_set_enable("log_kevents", false);
+
 	pr_auto(ASL1, "INFO: %s detected stalls on CPUs/tasks:",
 	       rsp->name);
 
@@ -1127,6 +1131,9 @@ static void print_cpu_stall(struct rcu_state *rsp)
 	 * See Documentation/RCU/stallwarn.txt for info on how to debug
 	 * RCU CPU stall warnings.
 	 */
+	exynos_ss_save_context(NULL);
+	exynos_ss_set_enable("log_kevents", false);
+
 	pr_auto(ASL1, "INFO: %s self-detected stall on CPU", rsp->name);
 
 	print_cpu_stall_info_begin();
