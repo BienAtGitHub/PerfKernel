@@ -500,13 +500,13 @@
 		devfreq_type = "mif";
 		devfreq_domain_name = "dvfs_mif";
 		opp_list_length = <7>;
-		opp_list = < 0 902000 900000
-			     1 825000 900000
-			     2 728000 900000
-			     3 676000 900000
-			     4 546000 900000
-			     5 451000 900000
-			     6 275000 900000>;
+		opp_list = < 0 902000 812500
+			     1 825000 812500
+			     2 728000 812500
+			     3 676000 812500
+			     4 546000 812500
+			     5 451000 812500
+			     6 275000 812500>;
 
 		/* initial_freq, default_qos, suspend_freq, cal_qos_max, min_freq, max_freq */
 		freq_info = <902000 451000 451000 902000 451000 902000>;
@@ -545,10 +545,10 @@
 		devfreq_domain_name = "dvfs_int";
 		opp_list_length = <4>;
 		/* idx freq volt */
-		opp_list = <0 400000 900000
-			    1 334000 900000
-			    2 200000 900000
-			    3 134000 900000>;
+		opp_list = <0 400000 812500
+			    1 334000 812500
+			    2 200000 812500
+			    3 134000 812500>;
 
 		/* <initial_freq, default_qos, suspend_freq, cal_qos_max, min, max> */
 		freq_info = <400000 134000 134000 400000 134000 400000>;
@@ -587,8 +587,8 @@
 		devfreq_domain_name = "dvfs_disp";
 		opp_list_length = <2>;
 		/* idx freq volt */
-		opp_list = <0 200000 900000
-			    1 134000 900000>;
+		opp_list = <0 200000 812500
+			    1 134000 812500>;
 
 		/* <initial_freq, default_qos, suspend_freq, cal_qos_max, min, max> */
 		freq_info = <200000 134000 134000 200000 134000 200000>;
@@ -626,9 +626,9 @@
 		devfreq_type = "cam";
 		devfreq_domain_name = "dvfs_cam";
 		opp_list_length = <2>;
-		opp_list = <0 533000 900000
-			    1 334000 900000
-			    2 167000 900000>;
+		opp_list = <0 533000 812500
+			    1 334000 812500
+			    2 167000 812500>;
 
 		/* <initial, default_qos, suspend_freq, cal_qos_max, min, max> */
 		freq_info = <167000 167000 167000 533000 167000 533000>;
