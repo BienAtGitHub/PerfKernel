@@ -638,19 +638,19 @@ static int dvfscpucl0_get_asv_table(unsigned int *table)
         table[1] = 1375000;
         table[2] = 1150000;
         table[3] = 1000000;
-        table[4] = 918750;
-        table[5] = 868750;
-        table[6] = 806250;
-        table[7] = 775000;
-        table[8] = 737500;
-        table[9] = 693750;
-        table[10] = 656250;
-        table[11] = 643750;
-        table[12] = 631250;
-        table[13] = 600000;
-        table[14] = 556250;
-        table[15] = 518750;
-        table[16] = 500000;
+        table[4] = 925000;
+        table[5] = 875000;
+        table[6] = 812500;
+        table[7] = 781250;
+        table[8] = 743750;
+        table[9] = 700000;
+        table[10] = 662500;
+        table[11] = 650000;
+        table[12] = 637500;
+        table[13] = 606250;
+        table[14] = 562500;
+        table[15] = 525000;
+        table[16] = 506250;
 	}
 
 	return max_lv;
@@ -670,19 +670,19 @@ static int dvfscpucl1_get_asv_table(unsigned int *table)
         table[1] = 1375000;
         table[2] = 1150000;
         table[3] = 1000000;
-        table[4] = 918750;
-        table[5] = 868750;
-        table[6] = 806250;
-        table[7] = 775000;
-        table[8] = 737500;
-        table[9] = 693750;
-        table[10] = 656250;
-        table[11] = 643750;
-        table[12] = 631250;
-        table[13] = 600000;
-        table[14] = 556250;
-        table[15] = 518750;
-        table[16] = 500000;
+        table[4] = 925000;
+        table[5] = 875000;
+        table[6] = 812500;
+        table[7] = 781250;
+        table[8] = 743750;
+        table[9] = 700000;
+        table[10] = 662500;
+        table[11] = 650000;
+        table[12] = 637500;
+        table[13] = 606250;
+        table[14] = 562500;
+        table[15] = 525000;
+        table[16] = 506250;
 	}
 
 	return max_lv;
