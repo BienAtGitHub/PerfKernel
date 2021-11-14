@@ -634,23 +634,23 @@ static int dvfscpucl0_get_asv_table(unsigned int *table)
 	{
 	/* CL0 Voltage Override
 	Define Needed Voltages manually */
-	table[0] = 1200000;
-	table[1] = 1375000;
-	table[2] = 1150000;
-	table[3] = 1000000;
-	table[4] = 950000;
-	table[5] = 900000;
-	table[6] = 850000;
-	table[7] = 806250;
-	table[8] = 768750;
-	table[9] = 725000;
-	table[10] = 687500;
-	table[11] = 675000;
-	table[12] = 662500;
-	table[13] = 631250;
-	table[14] = 587500;
-	table[15] = 550000;
-	table[16] = 531250;	
+        table[0] = 1200000;
+        table[1] = 1375000;
+        table[2] = 1150000;
+        table[3] = 1000000;
+        table[4] = 918750;
+        table[5] = 868750;
+        table[6] = 806250;
+        table[7] = 775000;
+        table[8] = 737500;
+        table[9] = 693750;
+        table[10] = 656250;
+        table[11] = 643750;
+        table[12] = 631250;
+        table[13] = 600000;
+        table[14] = 556250;
+        table[15] = 518750;
+        table[16] = 500000;
 	}
 
 	return max_lv;
@@ -666,23 +666,23 @@ static int dvfscpucl1_get_asv_table(unsigned int *table)
 	{
 	/* CL1 Voltage Override
 	Define Needed Voltages manually */
-	table[0] = 1200000;
-	table[1] = 1325000;
-	table[2] = 1150000;
-	table[3] = 1000000;
-	table[4] = 950000;
-	table[5] = 900000;
-	table[6] = 850000;
-	table[7] = 806250;
-	table[8] = 768750;
-	table[9] = 725000;
-	table[10] = 687500;
-	table[11] = 675000;
-	table[12] = 662500;
-	table[13] = 631250;
-	table[14] = 587500;
-	table[15] = 550000;
-	table[16] = 531250;	
+        table[0] = 1200000;
+        table[1] = 1375000;
+        table[2] = 1150000;
+        table[3] = 1000000;
+        table[4] = 918750;
+        table[5] = 868750;
+        table[6] = 806250;
+        table[7] = 775000;
+        table[8] = 737500;
+        table[9] = 693750;
+        table[10] = 656250;
+        table[11] = 643750;
+        table[12] = 631250;
+        table[13] = 600000;
+        table[14] = 556250;
+        table[15] = 518750;
+        table[16] = 500000;
 	}
 
 	return max_lv;
