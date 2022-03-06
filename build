@@ -2,17 +2,34 @@
 
 set -e
 
-YM_OUT=$PWD/out/arch/arm64/boot
-YM_AIK=~/AIK
+export YM_OUT=$PWD/out/arch/arm64/boot
+export YM_AIK=~/AIK
 export ARCH=arm64
-export CROSS_COMPILE=aarch64-linux-gnu-
+export CROSS_COMPILE=aarch64-unknown-linux-gnu-
 export ANDROID_MAJOR_VERSION=q
-export YM_CCACHE=ccache
+export YM_BUILD_OUT=/home/bien/build
+export CCACHE_DIR=/home/bien/ccache
+
+PREPARE_MOUNT() {
+	if mount | grep $YM_BUILD_OUT > /dev/null; then
+		echo "Skipping build mount"
+	else
+		echo "build not mounted, mounting"
+		sudo mount -t tmpfs -o size=3G tmpfs $YM_BUILD_OUT
+	fi
+	if mount | grep $CCACHE_DIR > /dev/null; then
+                echo "Skipping ccache mount"
+        else
+                echo "ccache not mounted, mounting"
+                sudo mount -t tmpfs -o size=3G tmpfs $CCACHE_DIR
+        fi
+
+}
 
 BUILD_KERNEL() {
 	make -j8 mrproper
-	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=./out -j8 exynos7870-j7y17lte_defconfig
-	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=./out -j8
+	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=$YM_BUILD_OUT -j8 exynos7870-j7y17lte_defconfig
+	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=$YM_BUILD_OUT -j8
 }
 
 BUILD_IMAGE() {
@@ -34,6 +51,7 @@ REGEN_CONFIG() {
 if [ "$1" == "regen" ]; then
 	REGEN_CONFIG
 else
+	PREPARE_MOUNT
 	BUILD_KERNEL
-	BUILD_IMAGE
+#	BUILD_IMAGE
 fi
