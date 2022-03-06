@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+YM_OUT=$PWD/out/arch/arm64/boot
+YM_AIK=~/AIK
+export ARCH=arm64
+export CROSS_COMPILE=aarch64-linux-gnu-
+export ANDROID_MAJOR_VERSION=q
+export YM_CCACHE=ccache
+
+BUILD_KERNEL() {
+	make -j8 mrproper
+	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=./out -j8 exynos7870-j7y17lte_defconfig
+	make HOSTCC="ccache gcc" HOSTCXX="ccache g++" AS="ccache as" LD="ccache ld" CC="ccache gcc" CPP="ccache gcc -E" AR="ccache ar" NM="ccache nm" STRIP="ccache strip" OBJCOPY="ccache objcopy" OBJDUMP="ccache objdump" O=./out -j8
+}
+
+BUILD_IMAGE() {
+        mv -v $YM_OUT/dtb.img $YM_AIK/split_img/boot.img-dtb
+        mv -v $YM_OUT/Image $YM_AIK/split_img/boot.img-zImage
+	cd $YM_AIK && ./repackimg.sh
+	ls -l $YM_AIK/image-new.img
+}
+
+REGEN_CONFIG() {
+	cp -v arch/arm64/configs/exynos7870-j7y17lte_defconfig .config
+#	make oldconfig
+	make menuconfig
+	mv -v .config arch/arm64/configs/exynos7870-j7y17lte_defconfig
+	git add arch/arm64/configs/exynos7870-j7y17lte_defconfig
+#	git commit -m "defconfig: regenerate"
+}
+
+if [ "$1" == "regen" ]; then
+	REGEN_CONFIG
+else
+	BUILD_KERNEL
+	BUILD_IMAGE
+fi
